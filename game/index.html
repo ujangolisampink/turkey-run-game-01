@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Gobble Run — The Great Thanksgiving Escape</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #f7cf8e;
+    font-family: "Trebuchet MS", "Segoe UI", Verdana, sans-serif; }
+  #game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  #hud { position: fixed; top: 0; left: 0; right: 0; display: flex; justify-content: space-between;
+    align-items: flex-start; padding: 14px 18px; pointer-events: none; z-index: 5; }
+  .panel { background: rgba(20, 14, 6, 0.55); color: #fff8e7; border-radius: 12px;
+    padding: 8px 14px; backdrop-filter: blur(2px); }
+  .panel .big { font-size: 26px; font-weight: 800; line-height: 1.05; letter-spacing: 0.5px; }
+  .panel .label { font-size: 11px; letter-spacing: 2px; opacity: 0.85; text-transform: uppercase; }
+  #lives { font-size: 24px; letter-spacing: 2px; }
+  #farmerBar { width: 220px; }
+  #farmerFill { height: 10px; border-radius: 6px; background: linear-gradient(90deg, #ff5a3c, #ffb03c);
+    width: 100%; transition: width 0.2s; }
+  #toast { position: fixed; top: 22%; left: 50%; transform: translateX(-50%); z-index: 6;
+    font-size: 30px; font-weight: 800; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.55);
+    pointer-events: none; opacity: 0; transition: opacity 0.25s; text-align: center; }
+  #overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+    z-index: 10; background: linear-gradient(180deg, rgba(60,30,0,0.25), rgba(60,30,0,0.55)); }
+  #card { background: rgba(255, 248, 232, 0.97); border-radius: 20px; padding: 28px 36px;
+    max-width: 560px; text-align: center; box-shadow: 0 18px 60px rgba(0,0,0,0.4); }
+  #card h1 { margin: 0 0 4px; font-size: 44px; color: #8a3b12; letter-spacing: 1px; }
+  #card h2 { margin: 0 0 12px; font-size: 17px; color: #b06a1e; font-weight: 700; }
+  #card p { color: #4a3220; font-size: 15px; line-height: 1.55; margin: 8px 0; }
+  #card .keys { font-size: 13px; background: #fff1d6; border-radius: 10px; padding: 8px 12px; }
+  #card button { margin: 10px 6px 0; padding: 13px 30px; font-size: 18px; font-weight: 800;
+    border: none; border-radius: 999px; cursor: pointer; color: #fff; background: #d35400;
+    box-shadow: 0 4px 0 #933800; }
+  #card button:active { transform: translateY(3px); box-shadow: 0 1px 0 #933800; }
+  #card button.secondary { background: #7a5a2e; box-shadow: 0 4px 0 #4e3a1c; }
+  #card .tiny { font-size: 12px; color: #8a6f52; }
+  #muteBtn { position: fixed; right: 16px; bottom: 14px; z-index: 8; pointer-events: auto;
+    background: rgba(20,14,6,0.55); color: #fff8e7; border: none; border-radius: 999px;
+    padding: 8px 16px; font-size: 14px; cursor: pointer; }
+  #status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<canvas id="game" aria-label="Gobble Run: a turkey escapes Thanksgiving dinner, outrunning the farmer"></canvas>
+<div id="hud" class="hidden">
+  <div class="panel"><div class="label">Score</div><div class="big" id="score">0</div></div>
+  <div class="panel" style="text-align:center"><div class="label">Distance to freedom</div>
+    <div class="big"><span id="dist">0</span> m / 1000 m</div>
+    <div id="farmerBar"><div id="farmerFill"></div></div>
+    <div class="label" id="farmerLabel" style="margin-top:4px">Farmer 14 m behind you</div>
+  </div>
+  <div class="panel" style="text-align:right"><div class="label">Lives</div><div id="lives">&#10084;&#10084;&#10084;</div></div>
+</div>
+<div id="toast"></div>
+<div id="overlay">
+  <div id="card">
+    <h1 id="cardTitle">GOBBLE RUN</h1>
+    <h2 id="cardSub">The Great Thanksgiving Escape</h2>
+    <p id="cardText">You are the turkey. Thanksgiving is coming, the farmer is right behind you,
+      and the farm is full of ovens, carving knives, hay bales and fences. Run 1000 metres
+      to the forest and you are free.</p>
+    <p class="keys">&#8592; &#8594; or A / D &mdash; switch lane &nbsp;&bull;&nbsp; &#8593; / Space &mdash; jump
+      &nbsp;&bull;&nbsp; &#8595; / S &mdash; slide &nbsp;&bull;&nbsp; P &mdash; pause &nbsp;&bull;&nbsp; M &mdash; mute<br>
+      Click the left or right side of the screen to steer. Grab corn for points and to slow the farmer down.</p>
+    <button id="startBtn">START THE ESCAPE</button>
+    <button id="againBtn" class="secondary hidden">RUN AGAIN</button>
+    <p class="tiny">A 3D endless runner. Best played with keyboard. No downloads, no sign-in.</p>
+  </div>
+</div>
+<button id="muteBtn">Sound: ON</button>
+<p id="status" role="status" aria-live="polite"></p>
+<script src="./vendor/three.min.js"></script>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
